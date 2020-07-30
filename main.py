@@ -16,7 +16,10 @@ DB_PASSWORD = os.environ.get('DB_PASSWORD')
 AWS_SECRET_ENDPOINT_URL = os.environ.get('AWS_SECRET_ENDPOINT_URL')
 AWS_BUCKET = os.environ.get('AWS_BUCKET')
 
-dir_name = "./backups/"
+dir_name = os.path.dirname(os.path.abspath(__file__))+"/backups/"
+if not os.path.exists(dir_name):
+    os.makedirs(dir_name)
+
 file_name = f"{DB_NAME}_{date}.sql"
 
 result = os.system(f"mysqldump -h {DB_HOST} -P {DB_PORT} -u{DB_USER} -p{DB_PASSWORD} --opt {DB_NAME} > {dir_name}{file_name}")
@@ -30,3 +33,5 @@ if os.path.exists(f"{dir_name}{file_name}"):
     )
 
     s3.upload_file(f"{dir_name}{file_name}", AWS_BUCKET, file_name)
+
+    os.remove(f"{dir_name}{file_name}")
