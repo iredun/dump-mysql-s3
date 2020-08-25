@@ -1,2 +1,4 @@
 boto3==1.14.31
 python-dotenv==0.14.0
+
+requests~=2.24.0
